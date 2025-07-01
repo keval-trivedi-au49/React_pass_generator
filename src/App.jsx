@@ -2,9 +2,51 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  let alphabatics = 'ABCDEFGHIJKLMNOPQRSTUVabcdefghijklmnopqrstuvwxyz'
+  const num = '1234567890'
+  const specials = '!@#$%^&*()'
+  const [count, setCount] = useState(5)
+  const [includeNumber, setIncludeNumber] = useState(false)
+  const [addSpecial, setaddSpecial] = useState(false)
+  const [pass, setPass] = useState('ABCDE');
+
+
   const sliderChange = (e) => {
-    setCount(e.target.value)
+    const length = e.target.value;
+    setCount(length)
+    let charPool = alphabatics;
+    charPool = includeNumber ? charPool += num : charPool
+    let str = '';
+    for (let i = 0; i < length; i++) {
+      const index = Math.floor(Math.random() * charPool.length);
+      str += charPool[index];
+    }
+    setPass(str);
+  };
+
+  const includeNum = (e) => {
+    let isChecked = e.target.checked;
+    setIncludeNumber(isChecked)
+    alphabatics = includeNumber ? alphabatics += num : alphabatics;
+    let str = '';
+    for (let i = 0; i <= count; i++) {
+      const index = Math.floor(Math.random() * alphabatics.length);
+      str += alphabatics[index];
+    };
+    setPass(str);
+  };
+
+  const includeSpecial = (e) => {
+    let isChecked = e.target.checked;
+    setaddSpecial(isChecked)
+    alphabatics = includeNumber ? alphabatics += num : alphabatics;
+    alphabatics = addSpecial ? alphabatics += specials : alphabatics;
+    let str = '';
+    for (let i = 0; i < count; i++) {
+      const index = Math.floor(Math.random() * alphabatics.length);
+      str += alphabatics[index];
+    };
+    setPass(str);
   };
 
   return (
@@ -14,17 +56,22 @@ function App() {
           <input
             type="text"
             placeholder='Password'
+            readOnly
+            value={pass}
             className='border px-3 py-2 rounded w-64'
           />
-        <div className='m-4'>
-        <input type="range" min="1" max="100" onChange={sliderChange}/> {count}
-        <div  className='m-4'>
-        <input type="checkbox"/> Number
-        </div>
-        <div className='m-4'>
-        <input type="checkbox"/> Special Character
-        </div>
-        </div>
+          <div className='m-4'>
+            <label className='mr-2'>Length</label>
+            <input type="range" min="1" max="20" value={count} onChange={sliderChange} /> {count}
+            <div className='m-4'>
+              <label className='mr-2'>Number</label>
+              <input type="checkbox" checked={includeNumber} onChange={includeNum} />
+            </div>
+            <div className='m-4'>
+              <label className='mr-2'>Special Character</label>
+              <input type="checkbox" checked={addSpecial} onChange={includeSpecial}/>
+            </div>
+          </div>
         </div>
       </div>
     </>
